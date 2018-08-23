@@ -52,7 +52,17 @@ public class TBaseUser implements DTO{
 	// 语言类型,默认为基础语言 0
 	@javax.persistence.Column
 	private int    language;
+	// 人员头像的URI地址
+	@javax.persistence.Column
+	private String avatar;
 	
+	
+	public String getAvatar() {
+		return avatar;
+	}
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
 	public int getLanguage() {
 		return language;
 	}

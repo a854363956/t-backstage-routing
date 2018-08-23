@@ -23,7 +23,8 @@ import t.sql.query.Query;
 public class UserModels {
 	@org.springframework.beans.factory.annotation.Autowired
 	private t.sql.SessionFactory sessionFactory;
-	
+	@org.springframework.beans.factory.annotation.Autowired
+	private NotifyModels notifyModels;
 	/**
 	 * 获取当前用户的用户信息
 	 * @param j
@@ -36,11 +37,11 @@ public class UserModels {
 		// 用户名称
 		result.put("name",tbu.getUserName());
 		// 用户头像
-		// result.put("avatar",tbu.getLanguage());
+		result.put("avatar",tbu.getAvatar());
 		// 用户id
 		result.put("userid",tbu.getId());
 		// 用户未提醒的消息
-		result.put("notifyCount",0);
+		result.put("notifyCount",notifyModels.notifyCount());
 		return result;
 	}
 	
