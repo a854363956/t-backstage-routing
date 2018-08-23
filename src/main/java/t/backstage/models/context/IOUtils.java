@@ -4,7 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /***
- * 
+ * 用来管理流的工具类
  * @author zhangj
  * @date 2018年8月20日 下午2:08:01
  * @email zhangjin0908@hotmail.com

@@ -3,6 +3,7 @@ package t.backstage.models.entitys;
 import java.util.Date;
 
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import t.sql.interfaces.DTO;
 
@@ -12,6 +13,7 @@ import t.sql.interfaces.DTO;
  * @date 2018年8月23日 下午4:29:27
  * @email zhangjin0908@hotmail.com
  */
+@Table(name="t_base_notify")
 public class TBaseNotify implements DTO{
 	private static final long serialVersionUID = 8992876515942947859L;
 	// 用户唯一ID

@@ -2,6 +2,7 @@ package t.backstage.models.controls;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import com.alibaba.fastjson.JSONObject;
 import t.backstage.models.entitys.TBaseNotify;
 import t.backstage.models.entitys.TNotifySubscription;
 import t.backstage.routing.annotations.Post;
+import t.sql.interfaces.DTO;
 import t.sql.query.Query;
 
 /***
@@ -30,7 +32,7 @@ public class NotifyModels {
 	 * @return
 	 */
 	public Object notifyCount() {
-		String sql = "select count(1) as notifyCount  from t_base_notify  t where t.msgType in :msgType ";
+		String sql = "select count(1) as notifyCount  from t_base_notify  t where t.msgType in :msgType and t.state = 0.00 ";
 		Query<Map<String,Object>> tQuery = sessionFactory.getCurrentSession().createQuery(sql,HashMap.class);
 		tQuery.setParameter("msgType",getSubscription());
 		return tQuery.uniqueResult().get(t.backstage.models.context.DBMapKey.notifyCount);
@@ -57,6 +59,22 @@ public class NotifyModels {
 			result.add(n);
 		});
 		return result;
+	}
+	
+	/**
+	 * 清除当前的订阅消息
+	 * @param j
+	 */
+	@Post
+	public void clearNotices(JSONObject j) {
+		String sql ="select  *  from t_base_notify  t where t.msgType in :msgType  and t.state = 0.00";
+		Query<DTO> tQuery = sessionFactory.getCurrentSession().createQuery(sql,TBaseNotify.class);
+		tQuery.setParameter("msgType",getSubscription());
+		Collection<DTO> re  = tQuery.list();
+		re.forEach(tbn->{
+			((TBaseNotify)tbn).setState(1);
+		});
+		sessionFactory.getCurrentSession().updateBatch(re);
 	}
 	public String getMsgTypeToText(int type) {
 		return type == 0?"通知":type==1?"消息":type==2?"待办":"未知类型["+type+"]";

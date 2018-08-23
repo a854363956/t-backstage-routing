@@ -55,9 +55,9 @@ dependencies {
             "mysql:mysql-connector-java:6.0.6",
             "com.alibaba:fastjson:1.2.47",
             "ratel:t-sql-common:0.3.6",
-            "com.zaxxer:HikariCP:2.7.8"
+            "com.zaxxer:HikariCP:2.7.8",
+            "com.belerweb:pinyin4j:2.5.1"
      )
-    
 }
 
 sourceSets {
