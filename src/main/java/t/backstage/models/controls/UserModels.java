@@ -59,6 +59,7 @@ public class UserModels {
 	 *              -5000  
 	 *              -5001
 	 *              -5002
+	 *              -5007
 	 */
 	@Post
 	public  String login(JSONObject j) throws NoSuchAlgorithmException {
@@ -120,6 +121,7 @@ public class UserModels {
 				}
 			}
 		}else {
+			// 5007 admin用户只能在本地登入,无法在除127.0.0.1的其他地址内登入
 			throw new t.backstage.error.BusinessException(5007);
 		}
 		
@@ -152,12 +154,12 @@ public class UserModels {
 		}
 		if(newPasswordConfirm == null || "".equals(newPassword)) {
 			throw new t.backstage.error.BusinessException(5004);
-		}
+		} 
 		if(newPasswordConfirm.equals(newPassword)) {
 			TBaseUser pass = t.backstage.models.context.ContextUtils.getCurrentUser();
 			String newPass = t.backstage.models.context.ContextUtils.md5(password);
 			if(newPass.equals(pass.getPassword())) {
-				pass.setPassword(newPass);
+				pass.setPassword(t.backstage.models.context.ContextUtils.md5(newPassword));
 				sessionFactory.getCurrentSession().update(pass);
 				return;
 			}else {
