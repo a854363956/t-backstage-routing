@@ -14,6 +14,23 @@ import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombi
  * @email zhangjin0908@hotmail.com
  */
 public class StringUtils extends t.sql.utils.StringUtils {
+	
+	
+	/**
+	 * 判断当前字符串是否为空
+	 * @param txt
+	 * @return 如果为空返回true,否则返回false
+	 */
+	public static boolean isNull(String txt) {
+		if(txt == null || "".equals(txt)) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	public static String getPinYinHeadChar(String zn_str) {
+		return getPinYinHeadChar(zn_str,true);
+	}
 	/**
 	 * 将中文字符串转换为首字母拼音
 	 * @param zn_str   要转换的字符串

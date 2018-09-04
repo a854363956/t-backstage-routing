@@ -62,8 +62,9 @@ public class TService extends HttpServlet{
 						}else {
 							result.put("datas",o);
 						}
-						result.put("status",1);
+						result.put("status",0);
 						out.write(com.alibaba.fastjson.JSON.toJSONString(result).getBytes("UTF-8"));
+						return;
 					}else if(paramTypeList.length == 1) {
 						@SuppressWarnings("rawtypes")
 						Class cl =Class.forName(paramTypeList[0].getTypeName());
@@ -92,7 +93,9 @@ public class TService extends HttpServlet{
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			// 精简异常信息,将其他无关的异常信息去掉
+			Throwable ex = t.backstage.models.context.ContextUtils.getBottomError(e);
+			ex.printStackTrace();
 			Map<String,Object> result = new HashMap<String,Object>(); 
 		    //  0表示请求成功 -1表示请求失败
 			result.put("status",-1);

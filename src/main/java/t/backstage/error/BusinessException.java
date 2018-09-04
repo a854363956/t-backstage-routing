@@ -11,7 +11,7 @@ public class BusinessException  extends RuntimeException{
 	public BusinessException(int code) {
 		super("TX-"+code+":"+t.backstage.models.context.ContextUtils.getLanguage(code));
 	}
-	public BusinessException(int code,String...rep) {
+	public BusinessException(int code,Object...rep) {
 		super(String.format(("TX-"+code+":"+t.backstage.models.context.ContextUtils.getLanguage(code)),rep));
 	}
 }

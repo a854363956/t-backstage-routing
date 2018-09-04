@@ -55,6 +55,17 @@ public class TMenuData implements DTO {
 	// 排序字段
 	@Column
 	private double displayOrder;
+	// 助记码
+	@Column
+	private String abbreviation;
+	
+	public String getAbbreviation() {
+		return abbreviation;
+	}
+
+	public void setAbbreviation(String abbreviation) {
+		this.abbreviation = abbreviation;
+	}
 
 	public String getId() {
 		return id;
