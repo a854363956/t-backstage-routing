@@ -118,8 +118,12 @@ public class ContextUtils {
 	 * @return
 	 * @throws NoSuchAlgorithmException
 	 */
-	public static String getUUID() throws NoSuchAlgorithmException {
-		return md5(java.util.UUID.randomUUID().toString());
+	public static String getUUID()  {
+		try {
+			return md5(java.util.UUID.randomUUID().toString());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	/**

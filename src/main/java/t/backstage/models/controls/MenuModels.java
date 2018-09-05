@@ -9,6 +9,7 @@ import java.util.Map;
 import com.alibaba.fastjson.JSONObject;
 
 import t.backstage.error.BusinessException;
+import t.backstage.models.entitys.TBaseRole;
 import t.backstage.models.entitys.TMenuData;
 import t.backstage.routing.annotations.Post;
 import t.sql.Session;
@@ -271,6 +272,42 @@ public class MenuModels {
 		tmdQuery.setParameter("menuFather",fatherId);
 		tmdQuery.setParameter("equipmentId",equipmentId);
 		return tmdQuery.list();
+	}
+	
+	/**
+	 * 获取当前所有的角色信息
+	 * @param json
+	 * @return
+	 */
+	@Post
+	public List<TBaseRole> getTBaseRoleAll(JSONObject json){
+		Query<TBaseRole> tbrQuery =  sessionFactory.getCurrentSession().createQuery("select * from t_base_role",TBaseRole.class);
+		return tbrQuery.list();
+	}
+	/**
+	 * 设置为可访问权限
+	 * @param json
+	 */
+	@Post
+	public void authorizationMenu(JSONObject json) {
+		String id = json.getString("id");
+		if(t.backstage.models.context.StringUtils.isNull(id)) {
+			throw new t.backstage.error.BusinessException(5015,"id");
+		}
+		sessionFactory.getCurrentSession().nativeDMLSQL("update t_menu_authority set state = 1.0 where id =?",id);
+	}
+	
+	/**
+	 * 设置为不可访问权限
+	 * @param json
+	 */
+	@Post
+	public void unAuthorizationMenu(JSONObject json) {
+		String id = json.getString("id");
+		if(t.backstage.models.context.StringUtils.isNull(id)) {
+			throw new t.backstage.error.BusinessException(5015,"id");
+		}
+		sessionFactory.getCurrentSession().nativeDMLSQL("update t_menu_authority set state = 0.0 where id =?",id);
 	}
 	
 	/**
