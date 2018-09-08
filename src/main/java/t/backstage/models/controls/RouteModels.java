@@ -11,7 +11,6 @@ import t.backstage.models.entitys.TRequestAuthority;
 import t.backstage.models.entitys.TRequestData;
 import t.backstage.routing.annotations.Post;
 import t.sql.Session;
-import t.sql.interfaces.DTO;
 import t.sql.query.Query;
 
 /***
@@ -100,7 +99,7 @@ public class RouteModels {
 			throw new t.backstage.error.BusinessException(5015,"mId");
 		}
 		Session session = sessionFactory.getCurrentSession();
-		List<DTO> saveList = new java.util.ArrayList<DTO>();
+		List<TRequestAuthority> saveList = new java.util.ArrayList<TRequestAuthority>();
 		
 		Query<TRequestAuthority> qtaQuery = session.createQuery("select * from t_request_authority where mId=:mId",TRequestAuthority.class);
 		qtaQuery.setParameter("mId",mId);

@@ -13,7 +13,6 @@ import t.backstage.models.entitys.TBaseRole;
 import t.backstage.models.entitys.TMenuData;
 import t.backstage.routing.annotations.Post;
 import t.sql.Session;
-import t.sql.interfaces.DTO;
 import t.sql.query.Query;
 
 /***
@@ -197,7 +196,7 @@ public class MenuModels {
 			 Query<t.backstage.models.entitys.TBaseRole> rQuery = session.createQuery("select * from t_base_role",t.backstage.models.entitys.TBaseRole.class);
 				List<t.backstage.models.entitys.TBaseRole> roles = rQuery.list();
 				// 创建的菜单节点
-				List<DTO> createMenus =new ArrayList<DTO>();
+				List<t.backstage.models.entitys.TMenuAuthority > createMenus =new ArrayList<t.backstage.models.entitys.TMenuAuthority >();
 				for(t.backstage.models.entitys.TBaseRole tbr : roles) {
 					// 初始化所有角色的权限数据
 					t.backstage.models.entitys.TMenuAuthority tma = new t.backstage.models.entitys.TMenuAuthority();

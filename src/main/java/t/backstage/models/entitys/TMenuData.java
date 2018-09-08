@@ -6,12 +6,6 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import net.sourceforge.pinyin4j.PinyinHelper;
-import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
-import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
-import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
-import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
-import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import t.sql.interfaces.DTO;
 
 /***
@@ -48,13 +42,13 @@ public class TMenuData implements DTO {
 	private Date createTime;
 	// 是否含有子节点
 	@Column
-	private int isLeaf;
+	private Integer isLeaf;
 	// 所属设备
 	@Column
 	private String equipmentId;
 	// 排序字段
 	@Column
-	private double displayOrder;
+	private Double displayOrder;
 	// 助记码
 	@Column
 	private String abbreviation;
@@ -123,11 +117,11 @@ public class TMenuData implements DTO {
 		this.createTime = createTime;
 	}
 
-	public int getIsLeaf() {
+	public Integer getIsLeaf() {
 		return isLeaf;
 	}
 
-	public void setIsLeaf(int isLeaf) {
+	public void setIsLeaf(Integer isLeaf) {
 		this.isLeaf = isLeaf;
 	}
 
@@ -139,11 +133,11 @@ public class TMenuData implements DTO {
 		this.equipmentId = equipmentId;
 	}
 
-	public double getDisplayOrder() {
+	public Double getDisplayOrder() {
 		return displayOrder;
 	}
 
-	public void setDisplayOrder(double displayOrder) {
+	public void setDisplayOrder(Double displayOrder) {
 		this.displayOrder = displayOrder;
 	}
 }
