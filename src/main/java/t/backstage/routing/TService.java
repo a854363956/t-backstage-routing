@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import t.backstage.models.context.SpringUtils;
 import t.backstage.routing.annotations.Post;
+import t.backstage.routing.filters.TFilter;
 
 
 
@@ -26,7 +28,10 @@ public class TService extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private static ThreadLocal<HttpServletRequest> threadRequest = new ThreadLocal<HttpServletRequest>();
 	private static ThreadLocal<HttpServletResponse> threadResponse = new ThreadLocal<HttpServletResponse>();
-	private static ThreadLocal<String> threadToken = new ThreadLocal<String>();
+	private static ThreadLocal<String> threadToken = new ThreadLocal<String>(); 
+	
+	// AES对前端请求的数据加密的密钥
+	private static String KEY = "2ea84ab4b6df474a961cfb2300cea7db";
 	/**
 	 * 针对Post请求进行路由
 	 */
@@ -51,8 +56,19 @@ public class TService extends HttpServlet{
 				// END
 				Post post = met.getAnnotation(t.backstage.routing.annotations.Post.class);
 				if(post != null) {
-					String body = t.backstage.models.context.IOUtils.readInputStream(in);
+					String body = t.backstage.models.context.CryptoJS.AES.decrypt(t.backstage.models.context.IOUtils.readInputStream(in).replaceAll("\"",""),KEY);
 					threadToken.set(com.alibaba.fastjson.JSON.parseObject(body).getString("token"));
+					
+					// 此处用来校验的路径拦截器
+					String[] beanResult = t.backstage.models.context.SpringUtils.getApplicationContext().getBeanNamesForType(t.backstage.routing.filters.TFilter.class);
+					for(String beanName : beanResult) {
+						TFilter t = (TFilter) SpringUtils.getApplicationContext().getBean(beanName);
+						boolean rBoolean = t.request(path,com.alibaba.fastjson.JSON.parseObject(body));
+						if(!rBoolean) {
+							throw new t.backstage.error.BusinessException(5016,path);	
+						}
+					}
+					
 					Type[] paramTypeList = met.getGenericParameterTypes();
 					Map<String,Object> result = new HashMap<String,Object>();
 					if(paramTypeList.length == 0) {

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
 
+import t.backstage.error.BusinessException;
 import t.backstage.models.entitys.TBaseRole;
 import t.backstage.models.entitys.TBaseSession;
 import t.backstage.models.entitys.TBaseUser;
@@ -44,6 +45,18 @@ public class UserModels {
 		result.put("notifyCount",notifyModels.notifyCount());
 		return result;
 	}
+	/**
+	 * 根据Id删除当前用户
+	 * @param j
+	 */
+	@Post
+	public void delUser(JSONObject j ) {
+		String id = j.getString("id");
+		if(t.backstage.models.context.StringUtils.isNull(id)) {
+			throw new BusinessException(5015,"id");
+		}
+		sessionFactory.getCurrentSession().nativeDMLSQL("delete from t_base_user where id =?",id);
+	}
 	
 	/**
 	 * 用户登入 PS: 只支持一个仓库一个用户,不支持一个用户对应多个仓库
@@ -75,6 +88,7 @@ public class UserModels {
 		query.setParameter("loginName",userName);
 		List<TBaseUser> result = query.list();
 		String ipAddr = t.backstage.models.context.ContextUtils.getIpAddr();
+		// 如果admin登入的是非127.0.0.1的地址访问，那么将禁止此用户登入
 		if("admin".equals(userName) &&  "127.0.0.1".equals(ipAddr)) {
 			if(result.isEmpty()) {
 				// 5000 表示根据用户名称和仓库Id未找到对应的用户资料

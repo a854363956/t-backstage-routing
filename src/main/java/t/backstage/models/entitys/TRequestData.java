@@ -31,6 +31,18 @@ public class TRequestData implements DTO {
 	// 备注
 	@javax.persistence.Column
 	private String remarks;
+	// 是否允许在未登入的情况下访问 0 表示不允许在未登入的情况下访问 1表示允许访问
+	@javax.persistence.Column
+	private int loginAuthorize;
+	
+	
+	public int getLoginAuthorize() {
+		return loginAuthorize;
+	}
+	public void setLoginAuthorize(int loginAuthorize) {
+		this.loginAuthorize = loginAuthorize;
+	}
+	
 	public String getId() {
 		return id;
 	}
