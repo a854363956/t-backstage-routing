@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +12,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.alibaba.fastjson.JSONObject;
 
 import t.backstage.models.context.SpringUtils;
 import t.backstage.routing.annotations.Post;
@@ -32,6 +35,41 @@ public class TService extends HttpServlet{
 	
 	// AES对前端请求的数据加密的密钥
 	private static String KEY = "2ea84ab4b6df474a961cfb2300cea7db";
+	
+	// 用户如果时间超过5秒钟就认为是重放攻击 单位/毫秒
+	private static long  PREVENT_REPLAY_ATTACK_TIME = 5000;
+	
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		resp.sendError(404);
+	}
+
+	@Override
+	protected void doHead(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		resp.sendError(404);
+	}
+
+	@Override
+	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		resp.sendError(404);
+	}
+
+	@Override
+	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		resp.sendError(404);
+	}
+
+	@Override
+	protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		resp.sendError(404);
+	}
+
+	@Override
+	protected void doTrace(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		resp.sendError(404);
+	}
+
 	/**
 	 * 针对Post请求进行路由
 	 */
@@ -57,8 +95,14 @@ public class TService extends HttpServlet{
 				Post post = met.getAnnotation(t.backstage.routing.annotations.Post.class);
 				if(post != null) {
 					String body = t.backstage.models.context.CryptoJS.AES.decrypt(t.backstage.models.context.IOUtils.readInputStream(in).replaceAll("\"",""),KEY);
-					threadToken.set(com.alibaba.fastjson.JSON.parseObject(body).getString("token"));
-					
+					JSONObject jBody = com.alibaba.fastjson.JSON.parseObject(body);
+					threadToken.set(jBody.getString("token"));
+					long localSendTime = jBody.getLong("localSendTime");
+					Date cureeDate  = new Date();
+					// 如果当前发送的时候大于5秒那么就认为是超时，在进行重放攻击
+					if(localSendTime + PREVENT_REPLAY_ATTACK_TIME < cureeDate.getTime()) {
+						throw new RuntimeException("Request has expired, please request again !");
+					}
 					// 此处用来校验的路径拦截器
 					String[] beanResult = t.backstage.models.context.SpringUtils.getApplicationContext().getBeanNamesForType(t.backstage.routing.filters.TFilter.class);
 					for(String beanName : beanResult) {
@@ -122,12 +166,16 @@ public class TService extends HttpServlet{
 			out.close();
 		}
 	}
+	
+	// 注意只在同一个线程中有效
 	public static HttpServletRequest getThreadRequest() {
 		return threadRequest.get();
 	}
+	// 注意只在同一个线程中有效
 	public static HttpServletResponse getThreadResponse() {
 		return threadResponse.get();
 	}
+	// 注意只在同一个线程中有效
 	public static String getThreadToken() {
 		return threadToken.get();
 	}

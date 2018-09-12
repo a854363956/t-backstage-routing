@@ -101,6 +101,8 @@ public class MenuModels {
 			session.transactionVoid(()->{
 				// 删除对应的权限节点
 				sessionFactory.getCurrentSession().nativeDMLSQL("delete from t_menu_authority  where mId = ?",id);
+				// 删除路由请求权限
+				sessionFactory.getCurrentSession().nativeDMLSQL("delete from t_request_authority where mId = ?",id);
 				// 删除菜单节点
 				sessionFactory.getCurrentSession().nativeDMLSQL("delete from t_menu_data where id=?",id);
 			});
@@ -353,7 +355,6 @@ class Menu{
 	// 子节点集
 	private List<Menu> children;
 	
-
 	public String getId() {
 		return id;
 	}

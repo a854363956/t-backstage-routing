@@ -63,6 +63,8 @@ public class StringUtils extends t.sql.utils.StringUtils {
 					} catch (BadHanyuPinyinOutputFormatCombination e) {
 						e.printStackTrace();
 					}
+				}else {
+					pyStringBuffer.append(strChar[i]);
 				}
 			}
 			return pyStringBuffer.toString();
