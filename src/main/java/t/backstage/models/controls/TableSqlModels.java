@@ -138,8 +138,8 @@ public class TableSqlModels {
 		}else {
 			try {
 				JSONObject j = com.alibaba.fastjson.JSON.parseObject(tbs.getScriptContent());
-				String querySql = j.getString("querySql");
-				String countSql = j.getString("countSql");
+				String querySql = new String(java.util.Base64.getDecoder().decode(j.getString("querySql")));
+				String countSql = new String (java.util.Base64.getDecoder().decode(j.getString("countSql")));
 				SQLDataSource sqlDs = new SQLDataSource();
 				sqlDs.setCountSql(countSql);
 				sqlDs.setQuerySql(querySql);

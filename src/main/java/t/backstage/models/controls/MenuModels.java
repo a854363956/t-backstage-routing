@@ -14,7 +14,6 @@ import t.backstage.models.entitys.TMenuData;
 import t.backstage.routing.annotations.Post;
 import t.sql.Session;
 import t.sql.query.Query;
-
 /***
  * 用来处理系统菜单
  * @author zhangj
