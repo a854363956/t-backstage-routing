@@ -14,6 +14,7 @@ import t.sql.interfaces.DTO;
 public class TDataSource implements DTO{
 	private static final long serialVersionUID = -6607115213396717089L;
 	// 唯一ID
+	@javax.persistence.Id
 	@javax.persistence.Column
 	private String id;
 	// 唯一代号名称,用户用来使用的名称
@@ -25,9 +26,6 @@ public class TDataSource implements DTO{
 	// 脚本内容
 	@javax.persistence.Column
 	private String scriptContent;
-	// 参数格式
-	@javax.persistence.Column
-	private String scriptParames;
 	// 创建日期
 	@javax.persistence.Column
 	private Date   createTime;
@@ -60,12 +58,6 @@ public class TDataSource implements DTO{
 	}
 	public void setScriptContent(String scriptContent) {
 		this.scriptContent = scriptContent;
-	}
-	public String getScriptParames() {
-		return scriptParames;
-	}
-	public void setScriptParames(String scriptParames) {
-		this.scriptParames = scriptParames;
 	}
 	public Date getCreateTime() {
 		return createTime;

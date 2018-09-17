@@ -42,6 +42,78 @@ public class TableSqlModels {
 		}
 	}
 	/**
+	 * 添加数据源
+	 * @param json
+	 */
+	public void addSqlSource(JSONObject json) {
+		// 用户代号
+		String nameCode = json.getString("nameCode");
+		// 数据类型
+		String dataType = json.getString("dataType");
+		// 备注
+		String remarks  = json.getString("remarks");
+	}
+	/**
+	 * 根据当前的ID删除符合当前id的数据
+	 * @param json
+	 *             -id 用户唯一id
+	 */
+	@Post
+	public void delSqlSource(JSONObject json) {
+		// 获取当前要删除数据的ID
+		String id = json.getString("id");
+		if(t.backstage.models.context.StringUtils.isNull(id)) {
+			throw new t.backstage.error.BusinessException(5015,"id");
+		}
+		Session session = sessionFactory.getCurrentSession();
+		session.transactionVoid(()->{
+			session.nativeDMLSQL("delete from t_table_column where dataSourceId = ?",id);
+			session.nativeDMLSQL("delete from t_data_source  where id = ?",id);
+		});
+	}
+	/**
+	 * 根据数据信息到当前数据源里面
+	 * @param json
+	 *       -querySql 查询的SQL
+	 *       -countSql 查询的count的sql
+	 *       -id       已存在的唯一ID
+	 *       -remarks  备注信息
+	 */
+	@Post
+	public void updateSql(JSONObject json) {
+		// 查询的SQL
+		String querySql = json.getString("querySql");
+		// 查询的count的sql
+		String countSql = json.getString("countSql");
+		// 当前查询的数据源id
+		String id       = json.getString("id");
+		// 当前数据源的备注
+		String remarks  = json.getString("remarks");
+		if(t.backstage.models.context.StringUtils.isNull(querySql)) {
+			throw new t.backstage.error.BusinessException(5015,"querySql");
+		}
+		if(t.backstage.models.context.StringUtils.isNull(countSql)) {
+			throw new t.backstage.error.BusinessException(5015,"countSql");
+		}
+		if(t.backstage.models.context.StringUtils.isNull(id)) {
+			throw new t.backstage.error.BusinessException(5015,"id");
+		}
+		Query<TDataSource> tdsQuery = sessionFactory.getCurrentSession().createQuery("select * from t_data_source where id=:id",TDataSource.class);
+		tdsQuery.setParameter("id",id);
+		TDataSource tds = tdsQuery.uniqueResult();
+		if(tds == null) {
+			throw new t.backstage.error.BusinessException(5017,id);
+		}else {
+			// 更新数据到数据源
+			JSONObject scriptContent = new JSONObject();
+			scriptContent.put("querySql",java.util.Base64.getEncoder().encodeToString(querySql.getBytes()));
+			scriptContent.put("countSql",java.util.Base64.getEncoder().encodeToString(countSql.getBytes()));
+			tds.setScriptContent(com.alibaba.fastjson.JSON.toJSONString(scriptContent));
+			tds.setRemarks(remarks);
+			sessionFactory.getCurrentSession().update(tds);
+		}
+	}
+	/**
 	 * 查询通用表格的列的信息
 	 * @param j   nameCode 代号名称
 	 * @return
@@ -49,13 +121,13 @@ public class TableSqlModels {
 	@Post                    
 	public List<TTableColumn> column(JSONObject j) {
 		String nameCode = j.getString("nameCode");
-		Query<TDataSource>  tdsQuery = sessionFactory.getCurrentSession().createQuery("select * from t_data_source where nameCode = :nameCode",TDataSource.class);
+		Query<TDataSource>  tdsQuery = sessionFactory.getCurrentSession().createQuery("select * from t_data_source where nameCode = :nameCode ",TDataSource.class);
 		tdsQuery.setParameter("nameCode",nameCode);
 		TDataSource tds = tdsQuery.uniqueResult();
 		if(tds  == null) {
 			throw new t.backstage.error.BusinessException(5010,nameCode);
 		}else {
-			Query<TTableColumn> tQuery = sessionFactory.getCurrentSession().createQuery("select * from t_table_column  where  dataSourceId =:dataSourceId ",TTableColumn.class);
+			Query<TTableColumn> tQuery = sessionFactory.getCurrentSession().createQuery("select * from t_table_column  where  dataSourceId =:dataSourceId order by displayOrder desc ",TTableColumn.class);
 			tQuery.setParameter("dataSourceId",tds.getId());
 			return tQuery.list();
 		}

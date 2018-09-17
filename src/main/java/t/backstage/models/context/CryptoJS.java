@@ -25,15 +25,6 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class CryptoJS {
 	public static class AES {
-		/**
-		 * 对字符串进行AES编码
-		 * @param body  要编码的内容
-		 * @param key   编码的key
-		 * @return
-		 */
-		public static String encrypt(String body ,String key) {
-			return "";
-		}
 		/***
 		 * 对字符串进行AES解码
 		 * @param body  要解码的内容

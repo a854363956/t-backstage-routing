@@ -13,9 +13,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.quartz.SchedulerException;
+
 import com.alibaba.fastjson.JSONObject;
 
 import t.backstage.models.context.SpringUtils;
+import t.backstage.models.jobs.QuartzFactory;
 import t.backstage.routing.annotations.Post;
 import t.backstage.routing.filters.TFilter;
 
@@ -32,6 +35,7 @@ public class TService extends HttpServlet{
 	private static ThreadLocal<HttpServletRequest> threadRequest = new ThreadLocal<HttpServletRequest>();
 	private static ThreadLocal<HttpServletResponse> threadResponse = new ThreadLocal<HttpServletResponse>();
 	private static ThreadLocal<String> threadToken = new ThreadLocal<String>(); 
+	private static QuartzFactory qf;
 	
 	// AES对前端请求的数据加密的密钥
 	private static String KEY = "2ea84ab4b6df474a961cfb2300cea7db";
@@ -167,6 +171,19 @@ public class TService extends HttpServlet{
 		}
 	}
 	
+	/**
+	 * 当前启动Tomcat的Service的时候加载定时器
+	 */
+	@Override
+	public void init() throws ServletException {
+		try {
+			QuartzFactory qf = t.backstage.models.jobs.QuartzFactory.singleCase();
+			this.qf = qf;
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+		}
+	}
+
 	// 注意只在同一个线程中有效
 	public static HttpServletRequest getThreadRequest() {
 		return threadRequest.get();
@@ -179,6 +196,12 @@ public class TService extends HttpServlet{
 	public static String getThreadToken() {
 		return threadToken.get();
 	}
+	// 定时器全局有效
+	public static QuartzFactory getQuartzFactory() {
+		return qf;
+	}
+
+
 	
 }
 
