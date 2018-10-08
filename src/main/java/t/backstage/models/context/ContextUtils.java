@@ -115,14 +115,15 @@ public class ContextUtils {
 		HttpServletRequest request = getHttpServletRequest();
 		return request.getRemoteAddr();
 	}
+	
 	/**
 	 * 获取唯一的UUID
 	 * @return
 	 * @throws NoSuchAlgorithmException
 	 */
-	public static String getUUID()  {
+	public static long getUUID()  {
 		try {
-			return md5(java.util.UUID.randomUUID().toString());
+			return SpringUtils.getApplicationContext().getBean(t.backstage.models.context.SnowflakeIdGenerator.class).nextId();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

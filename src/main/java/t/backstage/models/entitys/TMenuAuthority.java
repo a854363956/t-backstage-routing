@@ -19,38 +19,40 @@ public class TMenuAuthority implements DTO{
 	// 用户唯一ID
 	@javax.persistence.Id
 	@javax.persistence.Column
-	private String id;
+	private long id;
 	// 所属角色ID
 	@javax.persistence.Column
-	private String rId;
+	private long rId;
 	// 所属菜单ID
 	@javax.persistence.Column
-	private String mId;
+	private long mId;
 	// 当前可用状态 1.0表示正常 0.0表示禁止
 	@javax.persistence.Column
 	private double state;
 	// 创建人
 	@javax.persistence.Column
-	private String createUser;
+	private long createUser;
 	// 创建时间
 	@javax.persistence.Column
 	private Date   createTime;
-	public String getId() {
+
+	
+	public long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
-	public String getrId() {
+	public long getrId() {
 		return rId;
 	}
-	public void setrId(String rId) {
+	public void setrId(long rId) {
 		this.rId = rId;
 	}
-	public String getmId() {
+	public long getmId() {
 		return mId;
 	}
-	public void setmId(String mId) {
+	public void setmId(long mId) {
 		this.mId = mId;
 	}
 	public double getState() {
@@ -59,10 +61,10 @@ public class TMenuAuthority implements DTO{
 	public void setState(double state) {
 		this.state = state;
 	}
-	public String getCreateUser() {
+	public long getCreateUser() {
 		return createUser;
 	}
-	public void setCreateUser(String createUser) {
+	public void setCreateUser(long createUser) {
 		this.createUser = createUser;
 	}
 	public Date getCreateTime() {

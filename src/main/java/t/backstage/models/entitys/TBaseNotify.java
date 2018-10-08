@@ -19,7 +19,7 @@ public class TBaseNotify implements DTO{
 	// 用户唯一ID
 	@Id
 	@javax.persistence.Column
-	private String id;
+	private long id;
 	// 消息的标题
 	@javax.persistence.Column
 	private String title;
@@ -40,7 +40,7 @@ public class TBaseNotify implements DTO{
 	private Date   createTime;
 	// 创建人
 	@javax.persistence.Column
-	private String createUser;
+	private long createUser;
 	// 用户头像
 	@javax.persistence.Column
 	private String avatar;
@@ -51,10 +51,12 @@ public class TBaseNotify implements DTO{
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
-	public String getId() {
+
+	
+	public long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getTitle() {
@@ -93,12 +95,13 @@ public class TBaseNotify implements DTO{
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	public String getCreateUser() {
+	public long getCreateUser() {
 		return createUser;
 	}
-	public void setCreateUser(String createUser) {
+	public void setCreateUser(long createUser) {
 		this.createUser = createUser;
 	}
+	
 	
 	
 }

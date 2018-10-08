@@ -18,10 +18,10 @@ public class TNotifySubscription implements DTO{
 	// 唯一ID
 	@javax.persistence.Id
 	@javax.persistence.Column
-	private String id;
+	private long id;
 	// 当前订阅的角色ID
 	@javax.persistence.Column
-	private String rId;
+	private long rId;
 	// 当前的消息类型
 	@javax.persistence.Column
 	private int msgType;
@@ -30,17 +30,19 @@ public class TNotifySubscription implements DTO{
 	private Date createTime;
 	// 创建人
 	@javax.persistence.Column
-	private String createUser;
-	public String getId() {
+	private long createUser;
+	
+	public long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
-	public String getrId() {
+	
+	public long getrId() {
 		return rId;
 	}
-	public void setrId(String rId) {
+	public void setrId(long rId) {
 		this.rId = rId;
 	}
 	public int getMsgType() {
@@ -55,12 +57,13 @@ public class TNotifySubscription implements DTO{
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	public String getCreateUser() {
+	public long getCreateUser() {
 		return createUser;
 	}
-	public void setCreateUser(String createUser) {
+	public void setCreateUser(long createUser) {
 		this.createUser = createUser;
 	}
+	
 	
 }
 

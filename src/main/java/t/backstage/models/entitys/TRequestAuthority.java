@@ -17,26 +17,27 @@ public class TRequestAuthority  implements DTO{
 	private static final long serialVersionUID = -298278621942561975L;
 	// 用户唯一ID
 	@javax.persistence.Column
-	private String id;
+	private long id;
 	// 用户请求的路由ID
 	@javax.persistence.Column
 	private String requestId;
 	// 用户的菜单ID
 	@javax.persistence.Column
-	private String mId;
+	private long mId;
 	// 当前路由的状态
 	@javax.persistence.Column
 	private double state; 
 	// 当前创建人
 	@javax.persistence.Column
-	private String createUser;
+	private long createUser;
 	// 当前创建时间
 	@javax.persistence.Column
 	private Date   createTime;
-	public String getId() {
+	
+	public long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getRequestId() {
@@ -45,10 +46,11 @@ public class TRequestAuthority  implements DTO{
 	public void setRequestId(String requestId) {
 		this.requestId = requestId;
 	}
-	public String getmId() {
+	
+	public long getmId() {
 		return mId;
 	}
-	public void setmId(String mId) {
+	public void setmId(long mId) {
 		this.mId = mId;
 	}
 	public double getState() {
@@ -57,10 +59,10 @@ public class TRequestAuthority  implements DTO{
 	public void setState(double state) {
 		this.state = state;
 	}
-	public String getCreateUser() {
+	public long getCreateUser() {
 		return createUser;
 	}
-	public void setCreateUser(String createUser) {
+	public void setCreateUser(long createUser) {
 		this.createUser = createUser;
 	}
 	public Date getCreateTime() {

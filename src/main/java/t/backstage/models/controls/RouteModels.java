@@ -94,7 +94,7 @@ public class RouteModels {
 		if(ids == null) {
 		   throw new t.backstage.error.BusinessException(5015,"ids");
 		}
-		String    mId = parame.getString("mId");
+		Long mId = parame.getLong("mId");
 		if(mId == null) {
 			throw new t.backstage.error.BusinessException(5015,"mId");
 		}

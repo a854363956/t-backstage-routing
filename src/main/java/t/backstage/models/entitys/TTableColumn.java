@@ -16,10 +16,10 @@ public class TTableColumn implements DTO{
 	// 唯一ID
 	@javax.persistence.Id
 	@javax.persistence.Column
-	private String id ;
+	private Long id ;
 	// 数据源Id
 	@javax.persistence.Column
-	private String dataSourceId;
+	private long dataSourceId;
 	// 显示的列的名称
 	@javax.persistence.Column
 	private String headerName;
@@ -47,16 +47,24 @@ public class TTableColumn implements DTO{
 	public void setType(String type) {
 		this.type = type;
 	}
-	public String getId() {
+	
+	public double getDisplayOrder() {
+		return displayOrder;
+	}
+	public void setDisplayOrder(double displayOrder) {
+		this.displayOrder = displayOrder;
+	}
+	public long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
-	public String getDataSourceId() {
+	
+	public Long getDataSourceId() {
 		return dataSourceId;
 	}
-	public void setDataSourceId(String dataSourceId) {
+	public void setDataSourceId(long dataSourceId) {
 		this.dataSourceId = dataSourceId;
 	}
 	public String getHeaderName() {

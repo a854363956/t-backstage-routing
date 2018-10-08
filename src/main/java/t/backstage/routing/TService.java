@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.quartz.SchedulerException;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import t.backstage.models.context.SpringUtils;
 import t.backstage.models.jobs.QuartzFactory;
@@ -147,7 +148,8 @@ public class TService extends HttpServlet{
 						}
 						//  0表示请求成功 -1表示请求失败
 						result.put("status",0);
-						out.write(com.alibaba.fastjson.JSON.toJSONString(result).getBytes("UTF-8"));
+						// 修复long整数对浏览器导致的不精准的问题
+						out.write(com.alibaba.fastjson.JSON.toJSONString(result,SerializerFeature.BrowserCompatible).getBytes("UTF-8"));
 						return;
 					}else {
 						throw new t.backstage.error.ServiceException("Multi-parameters are not supported,URL is ["+path+"]");

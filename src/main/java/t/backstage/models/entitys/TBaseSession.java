@@ -21,13 +21,13 @@ public class TBaseSession implements DTO{
 	private String id ;
 	// 人员信息关联的ID
 	@javax.persistence.Column
-	private String uId;
+	private long uId;
 	// 用户登入方式
 	@javax.persistence.Column
 	private double loginMode;
 	// 所属仓库,目前仅仅只是支持一个人员对应一个仓库
 	@javax.persistence.Column
-	private String whId;
+	private long whId;
 	// 当前用户登入的ip地址
 	@javax.persistence.Column
 	private String ipAddr;
@@ -36,24 +36,27 @@ public class TBaseSession implements DTO{
 	private Date   createTime;
 	// 当前用户登入的设备
 	@javax.persistence.Column
-	private String equipmentId;
+	private long equipmentId;
 	
-	public String getEquipmentId() {
+	
+
+	public long getEquipmentId() {
 		return equipmentId;
 	}
-	public void setEquipmentId(String equipmentId) {
+	public void setEquipmentId(long equipmentId) {
 		this.equipmentId = equipmentId;
 	}
+
 	public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getuId() {
+	public long getuId() {
 		return uId;
 	}
-	public void setuId(String uId) {
+	public void setuId(long uId) {
 		this.uId = uId;
 	}
 	public double getLoginMode() {
@@ -62,10 +65,11 @@ public class TBaseSession implements DTO{
 	public void setLoginMode(double loginMode) {
 		this.loginMode = loginMode;
 	}
-	public String getWhId() {
+	
+	public long getWhId() {
 		return whId;
 	}
-	public void setWhId(String whId) {
+	public void setWhId(long whId) {
 		this.whId = whId;
 	}
 	public String getIpAddr() {

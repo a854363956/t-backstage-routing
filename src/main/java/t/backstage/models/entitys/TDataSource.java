@@ -16,7 +16,7 @@ public class TDataSource implements DTO{
 	// 唯一ID
 	@javax.persistence.Id
 	@javax.persistence.Column
-	private String id;
+	private long id;
 	// 唯一代号名称,用户用来使用的名称
 	@javax.persistence.Column
 	private String nameCode;
@@ -31,14 +31,15 @@ public class TDataSource implements DTO{
 	private Date   createTime;
 	// 创建人
 	@javax.persistence.Column
-	private String createUser;
+	private long createUser;
 	// 备注
 	@javax.persistence.Column
 	private String remarks;
-	public String getId() {
+	
+	public long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getNameCode() {
@@ -65,17 +66,18 @@ public class TDataSource implements DTO{
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	public String getCreateUser() {
-		return createUser;
-	}
-	public void setCreateUser(String createUser) {
-		this.createUser = createUser;
-	}
+
 	public String getRemarks() {
 		return remarks;
 	}
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+	public long getCreateUser() {
+		return createUser;
+	}
+	public void setCreateUser(long createUser) {
+		this.createUser = createUser;
 	}
 	
 	

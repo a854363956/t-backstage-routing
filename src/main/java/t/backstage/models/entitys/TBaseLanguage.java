@@ -19,7 +19,7 @@ public class TBaseLanguage implements DTO {
 	// 用户唯一ID
 	@Id
 	@javax.persistence.Column
-	private String id;
+	private long id;
 	// 语言类型 0表示基础语言
 	@javax.persistence.Column
 	private int    type;
@@ -31,15 +31,16 @@ public class TBaseLanguage implements DTO {
 	private String label;
 	// 创建人
 	@javax.persistence.Column
-	private String createUser;
+	private long createUser;
 	// 创建时间
 	@javax.persistence.Column
 	private Date   createTime;
 	
-	public String getId() {
+	
+	public long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public int getType() {
@@ -60,10 +61,11 @@ public class TBaseLanguage implements DTO {
 	public void setLabel(String label) {
 		this.label = label;
 	}
-	public String getCreateUser() {
+
+	public long getCreateUser() {
 		return createUser;
 	}
-	public void setCreateUser(String createUser) {
+	public void setCreateUser(long createUser) {
 		this.createUser = createUser;
 	}
 	public Date getCreateTime() {

@@ -83,7 +83,7 @@ public class UserModels {
 		// 用户登入的模式是网页登入,还是其他方式登入
 		double loginMode=j.getDoubleValue("loginMode");
 		// 用户登入的设备编号 0 表示采用网页的方式进登入
-		String equipmentId=j.getString("equipmentId");
+		long equipmentId=j.getLongValue("equipmentId");
 		Query<TBaseUser> query =sessionFactory.getCurrentSession().createQuery("select * from  t_base_user where loginName =:loginName",t.backstage.models.entitys.TBaseUser.class);
 		query.setParameter("loginName",userName);
 		List<TBaseUser> result = query.list();
@@ -117,7 +117,7 @@ public class UserModels {
 						}else {
 							// 如果用户是第一次登入,那么生成t_base_session的数据
 							TBaseSession tbs = new TBaseSession();
-							String id =  t.backstage.models.context.ContextUtils.getUUID() ;
+							String id = t.backstage.models.context.StringUtils.getUUID();
 							tbs.setId(id);
 							tbs.setIpAddr(t.backstage.models.context.ContextUtils.getIpAddr());
 							tbs.setLoginMode(loginMode);

@@ -19,27 +19,28 @@ public class TBaseRole implements DTO{
 	// 用户唯一ID
 	@Id
 	@javax.persistence.Column
-	private String id;
+	private long id;
 	// 角色名称
 	@javax.persistence.Column
 	private String roleName;
 	// 角色创建的人
 	@javax.persistence.Column
-	private String createUser;
+	private long createUser;
 	// 当前角色创建的时间
 	@javax.persistence.Column
 	private Date   createTime; 
 	// 仓库ID
 	@javax.persistence.Column
-	private String whId;
+	private long whId;
 	// 当前角色状态
 	@javax.persistence.Column
 	private double state;
 	
-	public String getId() {
+	
+	public long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getRoleName() {
@@ -48,10 +49,11 @@ public class TBaseRole implements DTO{
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
 	}
-	public String getCreateUser() {
+	
+	public long getCreateUser() {
 		return createUser;
 	}
-	public void setCreateUser(String createUser) {
+	public void setCreateUser(long createUser) {
 		this.createUser = createUser;
 	}
 	public Date getCreateTime() {
@@ -60,10 +62,11 @@ public class TBaseRole implements DTO{
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	public String getWhId() {
+	
+	public long getWhId() {
 		return whId;
 	}
-	public void setWhId(String whId) {
+	public void setWhId(long whId) {
 		this.whId = whId;
 	}
 	public double getState() {

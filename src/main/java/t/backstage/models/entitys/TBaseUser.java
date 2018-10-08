@@ -18,7 +18,7 @@ public class TBaseUser implements DTO{
 	// 用户唯一ID
 	@javax.persistence.Id
 	@javax.persistence.Column
-	private String id;
+	private long id;
 	// 用户显示名称
 	@javax.persistence.Column
 	private String userName;
@@ -36,10 +36,10 @@ public class TBaseUser implements DTO{
 	private Date   createTime;
 	// 创建人
 	@javax.persistence.Column
-	private String createUser;
+	private long createUser;
 	// 当前所属仓库
 	@javax.persistence.Column
-	private String whId;
+	private long whId;
 	// 当前人的状态
 	@javax.persistence.Column
 	private double state;
@@ -69,10 +69,11 @@ public class TBaseUser implements DTO{
 	public void setLanguage(int language) {
 		this.language = language;
 	}
-	public String getId() {
+	
+	public long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getUserName() {
@@ -105,16 +106,18 @@ public class TBaseUser implements DTO{
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	public String getCreateUser() {
+	
+	
+	public long getCreateUser() {
 		return createUser;
 	}
-	public void setCreateUser(String createUser) {
+	public void setCreateUser(long createUser) {
 		this.createUser = createUser;
 	}
-	public String getWhId() {
+	public long getWhId() {
 		return whId;
 	}
-	public void setWhId(String whId) {
+	public void setWhId(long whId) {
 		this.whId = whId;
 	}
 	public double getState() {

@@ -13,8 +13,9 @@ import t.sql.interfaces.DTO;
 @Table(name ="t_table_parames")
 public class TTableParames implements DTO{
 	private static final long serialVersionUID = 1736089542299033814L;
+	@javax.persistence.Id
 	@javax.persistence.Column
-	private String id;
+	private long id;
 	@javax.persistence.Column
 	private int    colon;
 	@javax.persistence.Column
@@ -25,10 +26,12 @@ public class TTableParames implements DTO{
 	private String name;
 	@javax.persistence.Column
 	private String dataSourceId;
-	public String getId() {
+	
+	
+	public long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public int getColon() {

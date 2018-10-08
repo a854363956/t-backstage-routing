@@ -21,7 +21,7 @@ public class TMenuData implements DTO {
 	// 唯一ID
 	@Id
 	@Column
-	private String id;
+	private long id;
 	// 菜单名称
 	@Column
 	private String menuName;
@@ -36,7 +36,7 @@ public class TMenuData implements DTO {
 	private String menuFather;
 	// 创建人
 	@Column
-	private String createUser;
+	private long createUser;
 	// 创建时间
 	@Column
 	private Date createTime;
@@ -45,7 +45,7 @@ public class TMenuData implements DTO {
 	private Integer isLeaf;
 	// 所属设备
 	@Column
-	private String equipmentId;
+	private long equipmentId;
 	// 排序字段
 	@Column
 	private Double displayOrder;
@@ -61,11 +61,12 @@ public class TMenuData implements DTO {
 		this.abbreviation = abbreviation;
 	}
 
-	public String getId() {
+
+	public long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -101,11 +102,11 @@ public class TMenuData implements DTO {
 		this.menuFather = menuFather;
 	}
 
-	public String getCreateUser() {
+	public long getCreateUser() {
 		return createUser;
 	}
 
-	public void setCreateUser(String createUser) {
+	public void setCreateUser(long createUser) {
 		this.createUser = createUser;
 	}
 
@@ -125,11 +126,12 @@ public class TMenuData implements DTO {
 		this.isLeaf = isLeaf;
 	}
 
-	public String getEquipmentId() {
+	
+	public long getEquipmentId() {
 		return equipmentId;
 	}
 
-	public void setEquipmentId(String equipmentId) {
+	public void setEquipmentId(long equipmentId) {
 		this.equipmentId = equipmentId;
 	}
 

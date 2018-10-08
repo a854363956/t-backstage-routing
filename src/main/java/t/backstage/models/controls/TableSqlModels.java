@@ -79,10 +79,7 @@ public class TableSqlModels {
 	@Post
 	public void updateColumn(JSONObject json) {
 		TTableColumn ttc = com.alibaba.fastjson.JSON.parseObject(json.toJSONString(),new com.alibaba.fastjson.TypeReference<TTableColumn>() {});
-		if(t.backstage.models.context.StringUtils.isNull(ttc.getId())) {
-			throw new t.backstage.error.BusinessException(5015,"id");
-		}
-		if(t.backstage.models.context.StringUtils.isNull(ttc.getDataSourceId())) {
+		if(ttc.getDataSourceId() == null) {
 			throw new t.backstage.error.BusinessException(5015,"dataSourceId");
 		}
 		sessionFactory.getCurrentSession().update(ttc);
@@ -101,12 +98,12 @@ public class TableSqlModels {
 		// 查询SQL脚本信息
 		String querySql = json.getString("querySql");
 		// 唯一id
-		String id       = json.getString("id");
+		Long id       = json.getLong("id");
 		
 		if(t.backstage.models.context.StringUtils.isNull(querySql)) {
 			throw new t.backstage.error.BusinessException(5015,"querySql");
 		}
-		if(t.backstage.models.context.StringUtils.isNull(id)) {
+		if(id == null) {
 			throw new t.backstage.error.BusinessException(5015,"id");
 		}
 		
@@ -160,7 +157,7 @@ public class TableSqlModels {
 					
 					// 如果存在生成了数据，那么就取生成过后的数据，如果未生成数据，那么就拦截数据
 					List<TTableColumn> lttc = haveTTC.stream().filter((d)->{
-						if(d.getDataSourceId().equals(id)) {
+						if(d.getDataSourceId() == id) {
 							return true;
 						}else {
 							return false;
@@ -255,8 +252,8 @@ public class TableSqlModels {
 	@Post
 	public void delSqlSource(JSONObject json) {
 		// 获取当前要删除数据的ID
-		String id = json.getString("id");
-		if(t.backstage.models.context.StringUtils.isNull(id)) {
+		Long id = json.getLong("id");
+		if(id == null) {
 			throw new t.backstage.error.BusinessException(5015,"id");
 		}
 		Session session = sessionFactory.getCurrentSession();

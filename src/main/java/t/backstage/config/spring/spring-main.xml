@@ -42,4 +42,10 @@
 			<ref bean="dataSourceHikari"/>
 		</constructor-arg>
 	</bean>
+	<bean id="snowflakeIdGenerator" class = "t.backstage.models.context.SnowflakeIdGenerator">
+	    <!-- 机器编号 -->
+	   <constructor-arg value="0"/>
+	    <!-- 库房编号 -->
+	 	<constructor-arg value="0"/>
+	</bean>
 </beans>

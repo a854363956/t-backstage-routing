@@ -84,7 +84,7 @@ public class NotifyModels {
 	 * @return
 	 */
 	public List<Integer> getSubscription(){
-		String rId = t.backstage.models.context.ContextUtils.getCurrentRole().getId();
+		long rId = t.backstage.models.context.ContextUtils.getCurrentRole().getId();
 		String sql = "select * from t_notify_subscription where rId = :rId";
 		Query<TNotifySubscription> tQuery = sessionFactory.getCurrentSession().createQuery(sql,TNotifySubscription.class);
 		tQuery.setParameter("rId",rId);
@@ -101,7 +101,7 @@ public class NotifyModels {
  */
 class Notify{
 	// 通知ID
-	private String id;
+	private long id;
 	// 头像地址
 	private String avatar;
 	// 消息标题
@@ -112,10 +112,11 @@ class Notify{
 	private String datetime;
 	// 消息类型
 	private String type;
-	public String getId() {
+
+	public long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getAvatar() {

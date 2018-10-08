@@ -32,7 +32,7 @@ public class MenuModels {
 	 */
 	@Post
 	public List<Menu> getAccessibleMenus(JSONObject parame) {
-		return selectByPermissionFatherAll("ROOT",t.backstage.models.context.ContextUtils.getCurrentSession().getEquipmentId());
+		return selectByPermissionFatherAll(-1,t.backstage.models.context.ContextUtils.getCurrentSession().getEquipmentId());
 	}
 	
 	/**
@@ -42,7 +42,7 @@ public class MenuModels {
 	 */
 	@Post
 	public List<Menu> getAllMenus(JSONObject parame) {
-		return selectByFatherAll("ROOT",t.backstage.models.context.ContextUtils.getCurrentSession().getEquipmentId());
+		return selectByFatherAll(-1,t.backstage.models.context.ContextUtils.getCurrentSession().getEquipmentId());
 	}
 	/**
 	 * 根据父节点ID查询当前含有的子节点ID
@@ -123,7 +123,7 @@ public class MenuModels {
 		// 菜单显示图标
 		String menuIcon     = j.getString("menuIcon");
 		// 设备类型
-		String equipmentId  = j.getString("equipmentId");
+		Long equipmentId  = j.getLong("equipmentId");
 		// 显示优先级
 		Double displayOrder = j.getDouble("displayOrder");
 		// 是否是菜单节点
@@ -131,7 +131,7 @@ public class MenuModels {
 		// 父节点ID
 		String menuFather   = j.getString("menuFather");
 		// 节点ID
-		String id           = j.getString("id");
+		long id             = j.getLongValue("id");
 		
 		TMenuData tmd = new TMenuData();
 		tmd.setId(id);
@@ -159,7 +159,7 @@ public class MenuModels {
 		// 菜单显示图标
 		String menuIcon     = j.getString("menuIcon");
 		// 设备类型
-		String equipmentId  = j.getString("equipmentId");
+		Long equipmentId  = j.getLong("equipmentId");
 		// 显示优先级
 		Double displayOrder = j.getDouble("displayOrder");
 		// 是否是菜单节点
@@ -180,7 +180,7 @@ public class MenuModels {
 	
 		// 保存菜单数据
 		TMenuData tmd = new TMenuData();
-		tmd.setId(t.sql.utils.StringUtils.getUUID());
+		tmd.setId(t.backstage.models.context.ContextUtils.getUUID());
 		tmd.setMenuName(menuName);
 		tmd.setMenuPath(menuPath);
 		tmd.setMenuIcon(menuIcon);
@@ -201,7 +201,7 @@ public class MenuModels {
 				for(t.backstage.models.entitys.TBaseRole tbr : roles) {
 					// 初始化所有角色的权限数据
 					t.backstage.models.entitys.TMenuAuthority tma = new t.backstage.models.entitys.TMenuAuthority();
-					tma.setId(t.sql.utils.StringUtils.getUUID());
+					tma.setId(t.backstage.models.context.ContextUtils.getUUID());
 					tma.setrId(tbr.getId());
 					tma.setmId(tmd.getId());
 					tma.setState(0.00);
@@ -219,7 +219,7 @@ public class MenuModels {
 	 * @param equipmentId     当前设备类型
 	 * @return
 	 */
-	public List<Menu> selectByFatherAll(String fatherId,String equipmentId) {
+	public List<Menu> selectByFatherAll(long fatherId,long equipmentId) {
 		 List<TMenuData> tmd = selectByFather(fatherId, equipmentId);
 		 if(tmd.size() == 0) {
 			 return null;
@@ -243,7 +243,7 @@ public class MenuModels {
 	 * @param equipmentId     当前设备类型
 	 * @return
 	 */
-	public List<Menu> selectByPermissionFatherAll(String fatherId,String equipmentId) {
+	public List<Menu> selectByPermissionFatherAll(long fatherId,long equipmentId) {
 		 List<TMenuData> tmd = selectByPermissionFather(fatherId, equipmentId);
 		 if(tmd.size() == 0) {
 			 return null;
@@ -267,7 +267,7 @@ public class MenuModels {
 	 * @param fatherId  当前菜单节点的节点ID
 	 * @return  返回查询到的所有菜单节点
 	 */
-	public List<TMenuData> selectByFather(String fatherId,String equipmentId){
+	public List<TMenuData> selectByFather(long fatherId,long equipmentId){
 		Query<TMenuData> tmdQuery = sessionFactory.getCurrentSession().createQuery("select * from t_menu_data where menuFather=:menuFather and equipmentId=:equipmentId and isLeaf = 0 order by displayOrder",TMenuData.class);
 		tmdQuery.setParameter("menuFather",fatherId);
 		tmdQuery.setParameter("equipmentId",equipmentId);
@@ -315,7 +315,7 @@ public class MenuModels {
 	 * @param fatherId  当前菜单节点的节点ID
 	 * @return  返回查询到的所有带权限的菜单节点
 	 */
-	public List<TMenuData> selectByPermissionFather(String fatherId,String equipmentId){
+	public List<TMenuData> selectByPermissionFather(long fatherId,long equipmentId){
 		String sql = "select \n" + 
 				"	md.id,\n" + 
 				"	md.menuPath,\n" + 
@@ -344,7 +344,7 @@ public class MenuModels {
  */
 class Menu{
 	// 唯一ID
-	private String     id;
+	private long     id;
 	// 显示名称
 	private String     name;
 	// 图标
@@ -353,11 +353,11 @@ class Menu{
 	private String     path;
 	// 子节点集
 	private List<Menu> children;
-	
-	public String getId() {
+
+	public long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getName() {

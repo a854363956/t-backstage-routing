@@ -18,13 +18,13 @@ public class TRequestData implements DTO {
 	private static final long serialVersionUID = -6999051121559693801L;
 	// 唯一ID
 	@javax.persistence.Column
-	private String id;
+	private long id;
 	// 请求的URL地址
 	@javax.persistence.Column
 	private String url;
 	// 创建人
 	@javax.persistence.Column
-	private String createUser;
+	private long createUser;
 	// 创建时间
 	@javax.persistence.Column
 	private Date   createTime;
@@ -43,10 +43,11 @@ public class TRequestData implements DTO {
 		this.loginAuthorize = loginAuthorize;
 	}
 	
-	public String getId() {
+	
+	public long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getUrl() {
@@ -55,12 +56,7 @@ public class TRequestData implements DTO {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	public String getCreateUser() {
-		return createUser;
-	}
-	public void setCreateUser(String createUser) {
-		this.createUser = createUser;
-	}
+
 	public Date getCreateTime() {
 		return createTime;
 	}
@@ -73,6 +69,13 @@ public class TRequestData implements DTO {
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
+	public long getCreateUser() {
+		return createUser;
+	}
+	public void setCreateUser(long createUser) {
+		this.createUser = createUser;
+	}
+	
 	
 }
 
