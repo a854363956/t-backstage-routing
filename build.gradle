@@ -60,6 +60,7 @@ dependencies {
             "com.github.odiszapc:nginxparser:0.9.3",
             "org.quartz-scheduler:quartz:2.2.1",
             "org.quartz-scheduler:quartz-jobs:2.2.1",
+            "com.github.jsqlparser:jsqlparser:1.2"
      )
 }
 

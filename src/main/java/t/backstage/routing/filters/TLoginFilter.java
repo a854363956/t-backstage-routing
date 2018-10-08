@@ -6,7 +6,7 @@ import t.backstage.models.entitys.TRequestData;
 import t.sql.query.Query;
 
 /***
- * 登入请求拦截器
+ * 登入请求拦截器-  t_request_data 表的数据可以缓存在中间件
  * @author zhangj
  * @date 2018年9月10日 下午10:12:24
  * @email zhangjin0908@hotmail.com
@@ -38,8 +38,6 @@ public class TLoginFilter implements TFilter{
 		}else {
 			return true;
 		}
-		
 	}
-
 }
 

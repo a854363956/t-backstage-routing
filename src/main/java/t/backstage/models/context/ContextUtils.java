@@ -1,6 +1,8 @@
 package t.backstage.models.context;
 
 import java.math.BigInteger;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -155,6 +157,20 @@ public class ContextUtils {
 		Query<TBaseRole> query = session.createQuery("select * from t_base_role where id=:id",TBaseRole.class);
 		query.setParameter("id",getCurrentUser().getrId());
 		return query.uniqueResult();
+	}
+	
+	private static InetAddress inetAddress = null;
+	
+	/**
+	 * 获取当前本地计算机的名称
+	 * @return
+	 * @throws UnknownHostException
+	 */
+	public static String getLocalId() throws UnknownHostException {
+		if(inetAddress == null) {
+			inetAddress = InetAddress.getLocalHost();
+		}
+		return inetAddress.getHostName();
 	}
 }
 
