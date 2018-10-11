@@ -11,6 +11,7 @@ import t.backstage.error.BusinessException;
 import t.backstage.models.entitys.TBaseRole;
 import t.backstage.models.entitys.TBaseSession;
 import t.backstage.models.entitys.TBaseUser;
+import t.backstage.models.entitys.TBaseWarehouse;
 import t.backstage.routing.annotations.Post;
 import t.sql.query.Query;
 
@@ -26,6 +27,71 @@ public class UserModels {
 	private t.sql.SessionFactory sessionFactory;
 	@org.springframework.beans.factory.annotation.Autowired
 	private NotifyModels notifyModels;
+	
+	/***
+	 * 根据人员id查询对应的人员名称
+	 * @return
+	 */
+	@Post
+	public String getUserNameByUserId(JSONObject j) {
+		Long id =j.getLong("id");
+		if(id == null) {
+			throw new BusinessException(5015,"id");
+		}
+		String sql ="select * from t_base_user where id =:id" ;
+		Query<TBaseUser> userQuery = sessionFactory.getCurrentSession().createQuery(sql,TBaseUser.class);
+		userQuery.setParameter("id",id);
+		
+		TBaseUser tbUser= userQuery.uniqueResult();
+		if(tbUser == null ) {
+			throw new BusinessException(5000);
+		}else {
+			return tbUser.getUserName();
+		}
+	}
+	/**
+	 * 根据角色id查询对应的角色名称
+	 * @return
+	 */
+	@Post
+	public String getRoleNameByRoleId(JSONObject j) {
+		Long id =j.getLong("id");
+		if(id == null) {
+			throw new BusinessException(5015,"id");
+		}
+		String sql ="select * from t_base_role  where id =:id" ;
+		Query<TBaseRole> userQuery = sessionFactory.getCurrentSession().createQuery(sql,TBaseRole.class);
+		userQuery.setParameter("id",id);
+		
+		TBaseRole tbRole= userQuery.uniqueResult();
+		if(tbRole == null ) {
+			throw new BusinessException(5019);
+		}else {
+			return tbRole.getRoleName();
+		}
+	}
+	/**
+	 * 根据仓库id查询对应的仓库名称
+	 * @return
+	 */
+	@Post
+	public String getWarehouseNameByWarehouseId(JSONObject j) {
+		Long id =j.getLong("id");
+		if(id == null) {
+			throw new BusinessException(5015,"id");
+		}
+		String sql ="select * from t_base_warehouse  where id =:id" ;
+		Query<TBaseWarehouse> userQuery = sessionFactory.getCurrentSession().createQuery(sql,TBaseWarehouse.class);
+		userQuery.setParameter("id",id);
+		
+		TBaseWarehouse tb= userQuery.uniqueResult();
+		if(tb == null ) {
+			throw new BusinessException(5019);
+		}else {
+			return tb.getName();
+		}	
+	}
+	
 	/**
 	 * 获取当前用户的用户信息
 	 * @param j

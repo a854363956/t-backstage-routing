@@ -41,17 +41,26 @@ public class TableSqlModels {
 	 * @throws JSQLParserException 
 	 */
 	private String toNotWhere(String sql) throws JSQLParserException {
-		Select select = (Select) CCJSqlParserUtil.parse(sql);
+		String realSql = sql.toString();
+		// 去掉SQL中的注释部分
+		realSql=realSql.replaceAll("--.*","");
+		List<String> parames = t.backstage.models.context.StringUtils.findRegular(realSql,":[A-Za-z_]+");
+		for(String param :parames) {
+			// 将SQL中的 select * from dual where name = :name 替换为 name = 'name' 避免解析器出现BUG
+			realSql=realSql.replaceAll(param,String.format("'%s'",param));
+		}
+		
+		Select select = (Select) CCJSqlParserUtil.parse(realSql);
 		PlainSelect ps = (PlainSelect) select.getSelectBody();
 		Expression where = ps.getWhere();
 		if(where == null) {
-			return sql;
+			return realSql;
 		}else {
 			String swhere = where.toString();
 			if(t.backstage.models.context.StringUtils.isNull(swhere)) {
-				return sql;
+				return realSql;
 			}else {
-				return sql.replace(swhere, " 1=2 ");
+				return realSql.replace(swhere, " 1=2 ");
 			}
 		}
 	}
@@ -133,6 +142,7 @@ public class TableSqlModels {
 				ttc.setHide(1);
 				ttc.setWidth(120);
 				ttc.setType("text");
+				ttc.setId(t.backstage.models.context.ContextUtils.getUUID());
 				fields.add(label);
 				ttcs.add(ttc);
 			}
@@ -168,6 +178,7 @@ public class TableSqlModels {
 					}else {
 					  httc = lttc.get(0);
 					}
+					
 					ttc.setEditable(httc.getEditable());
 					ttc.setHeaderName(httc.getHeaderName());
 					ttc.setHide(httc.getHide());
@@ -232,7 +243,7 @@ public class TableSqlModels {
 			tds.setCreateTime(new Date());
 			tds.setCreateUser(t.backstage.models.context.ContextUtils.getCurrentUser().getId());
 			JSONObject scriptContent = new JSONObject();
-			scriptContent.put("querySql","");
+			scriptContent.put("querySql",new String(java.util.Base64.getEncoder().encode("-- 常用变量:_USER 当前系统登入的人员ID,:_WAREHOUSE 当前登入人员所属的仓库ID\n\n".getBytes())));
 			scriptContent.put("countSql",new String(java.util.Base64.getEncoder().encode("-- count(1) as countNum 需要在这样进行别名的修改 \n\n".getBytes())));
 			tds.setScriptContent(com.alibaba.fastjson.JSON.toJSONString(scriptContent));
 			tds.setId(t.backstage.models.context.ContextUtils.getUUID());
@@ -368,8 +379,14 @@ public class TableSqlModels {
 		
 		List<String> queryRegulars =t.backstage.models.context.StringUtils.findRegular(querySql,":[A-Za-z0-9_]+");
 		for(String key : queryRegulars) {
-			String _key = key.replace(":","");
-			dataMapQuery.setParameter(_key,parames.get(_key));
+			if(key.equals(":_USER")) { // 常用变量人员ID
+				dataMapQuery.setParameter("_USER",t.backstage.models.context.ContextUtils.getCurrentUser().getId());
+			}else if(key.equals(":_WAREHOUSE")) { // 常用变量仓库ID
+				dataMapQuery.setParameter("_USER",t.backstage.models.context.ContextUtils.getCurrentUser().getWhId());
+			}else {
+				String _key = key.replace(":","");
+				dataMapQuery.setParameter(_key,parames.get(_key));
+			}
 		}
 
 		rp.setDatas(dataMapQuery.list());

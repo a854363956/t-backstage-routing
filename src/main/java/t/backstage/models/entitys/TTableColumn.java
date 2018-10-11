@@ -16,7 +16,7 @@ public class TTableColumn implements DTO{
 	// 唯一ID
 	@javax.persistence.Id
 	@javax.persistence.Column
-	private Long id ;
+	private long id ;
 	// 数据源Id
 	@javax.persistence.Column
 	private long dataSourceId;

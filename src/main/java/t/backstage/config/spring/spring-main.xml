@@ -18,19 +18,17 @@
 		destroy-method="shutdown">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/t_base" />
-		 <property name="username" value="root" />
+		<property name="username" value="root" />
 		<property name="password" value="" />
-		<!-- <property name="username" value="mscm_test" />
-		<property name="password" value="mscm_test" /> -->
 		<!-- 连接只读数据库时配置为true， 保证安全 -->
 		<property name="readOnly" value="false" />
 		<!-- 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQLException， 缺省:30秒 -->
-		<property name="connectionTimeout" value="30000" />
+		<property name="connectionTimeout" value="15000" />
 		<!-- 一个连接idle状态的最大时长（毫秒），超时则被释放（retired），缺省:10分钟 -->
 		<property name="idleTimeout" value="600000" />
 		<!-- 一个连接的生命时长（毫秒），超时而且没被使用则被释放（retired），缺省:30分钟，建议设置比数据库超时时长少30秒，参考MySQL 
 			wait_timeout参数（show variables like '%timeout%';） -->
-		<property name="maxLifetime" value="1800000" />
+		<property name="maxLifetime" value="28800" />
 		<!-- 连接池中允许的最大连接数。缺省值：10；推荐的公式：((core_count * 2) + effective_spindle_count) -->
 		<property name="maximumPoolSize" value="800" />
 		<property name="minimumIdle" value="10" />
@@ -40,6 +38,15 @@
 	<bean id="sessionFactory" class = "t.sql.SessionFactoryImp">
 		<constructor-arg>
 			<ref bean="dataSourceHikari"/>
+		</constructor-arg>
+	</bean>
+	<!-- 动态装配 -->
+	<bean id="springDynamicRegisteredBean" class="t.sql.dynamic.proxy.spring.SpringDynamicRegisteredBean">
+	  <constructor-arg>
+	  		<value>t.backstage.models.dao</value>
+		</constructor-arg>
+	   <constructor-arg>
+			<ref bean="sessionFactory"/>
 		</constructor-arg>
 	</bean>
 	<bean id="snowflakeIdGenerator" class = "t.backstage.models.context.SnowflakeIdGenerator">

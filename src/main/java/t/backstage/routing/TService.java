@@ -104,7 +104,7 @@ public class TService extends HttpServlet{
 					threadToken.set(jBody.getString("token"));
 					long localSendTime = jBody.getLong("localSendTime");
 					Date cureeDate  = new Date();
-					// 如果当前发送的时候大于5秒那么就认为是超时，在进行重放攻击
+					// 如果当前发送的时候大于5秒那么就认为是超时，在进行重放攻击 一般情况下执行到此刻的时间不会超过5000毫秒
 					if(localSendTime + PREVENT_REPLAY_ATTACK_TIME < cureeDate.getTime()) {
 						throw new RuntimeException("Request has expired, please request again !");
 					}
