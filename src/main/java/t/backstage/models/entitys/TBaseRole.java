@@ -35,8 +35,18 @@ public class TBaseRole implements DTO{
 	// 当前角色状态
 	@javax.persistence.Column
 	private double state;
+	// 是否是系统管理员 0 表示是系统管理员 1表示不是系统管理员
+	@javax.persistence.Column
+	private int isRoot;
 	
 	
+	
+	public int getIsRoot() {
+		return isRoot;
+	}
+	public void setIsRoot(int isRoot) {
+		this.isRoot = isRoot;
+	}
 	public long getId() {
 		return id;
 	}

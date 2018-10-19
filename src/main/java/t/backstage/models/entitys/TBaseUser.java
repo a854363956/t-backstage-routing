@@ -45,7 +45,7 @@ public class TBaseUser implements DTO{
 	private double state;
 	// 当前所属角色
 	@javax.persistence.Column
-	private String rId;
+	private long rId;
 	// 允许在线的最大时长单位/分钟
 	@javax.persistence.Column
 	private int    online;
@@ -126,10 +126,10 @@ public class TBaseUser implements DTO{
 	public void setState(double state) {
 		this.state = state;
 	}
-	public String getrId() {
+	public long getrId() {
 		return rId;
 	}
-	public void setrId(String rId) {
+	public void setrId(long rId) {
 		this.rId = rId;
 	}
 	public int getOnline() {

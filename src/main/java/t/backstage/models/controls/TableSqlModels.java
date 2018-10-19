@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import com.alibaba.fastjson.JSONObject;
 
@@ -43,7 +44,7 @@ public class TableSqlModels {
 	private String toNotWhere(String sql) throws JSQLParserException {
 		String realSql = sql.toString();
 		// 去掉SQL中的注释部分
-		realSql=realSql.replaceAll("--.*","");
+		realSql=delSqlComment(realSql);
 		List<String> parames = t.backstage.models.context.StringUtils.findRegular(realSql,":[A-Za-z_]+");
 		for(String param :parames) {
 			// 将SQL中的 select * from dual where name = :name 替换为 name = 'name' 避免解析器出现BUG
@@ -336,6 +337,14 @@ public class TableSqlModels {
 			return tQuery.list();
 		}
 	}
+	
+	/**
+	 * 删除SQL注释
+	 **/
+	private String delSqlComment(String sql) {
+		Pattern p = Pattern.compile("(?ms)('(?:''|[^'])*')|--.*?$|/\\*.*?\\*/");  
+		return p.matcher(sql).replaceAll("$1");  
+	}
 	/**
 	 * 通用的查询数据表格信息 目前仅仅只是支持当前的sql数据源
 	 * @param j
@@ -357,9 +366,9 @@ public class TableSqlModels {
 		Session session = sessionFactory.getCurrentSession();
 		ResultPage rp = new ResultPage();
 		// 查询SQL
-		String querySql =getQuerySql(nameCode);
+		String querySql =delSqlComment(getQuerySql(nameCode));
 		// 汇总SQL
-		String countSql =getCountSql(nameCode);
+		String countSql =delSqlComment(getCountSql(nameCode));
 		
 		// 设置当前count的数量
 		Query<Map<String,Object>> countMapQuery =session.createQuery(countSql,java.util.HashMap.class);
@@ -382,7 +391,7 @@ public class TableSqlModels {
 			if(key.equals(":_USER")) { // 常用变量人员ID
 				dataMapQuery.setParameter("_USER",t.backstage.models.context.ContextUtils.getCurrentUser().getId());
 			}else if(key.equals(":_WAREHOUSE")) { // 常用变量仓库ID
-				dataMapQuery.setParameter("_USER",t.backstage.models.context.ContextUtils.getCurrentUser().getWhId());
+				dataMapQuery.setParameter("_WAREHOUSE",t.backstage.models.context.ContextUtils.getCurrentUser().getWhId());
 			}else {
 				String _key = key.replace(":","");
 				dataMapQuery.setParameter(_key,parames.get(_key));

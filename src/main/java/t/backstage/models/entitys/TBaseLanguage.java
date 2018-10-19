@@ -22,10 +22,10 @@ public class TBaseLanguage implements DTO {
 	private long id;
 	// 语言类型 0表示基础语言
 	@javax.persistence.Column
-	private int    type;
+	private long    type;
 	// 语言代号
 	@javax.persistence.Column
-	private int    code;
+	private long    code;
 	// 显示名称
 	@javax.persistence.Column
 	private String label;
@@ -43,16 +43,18 @@ public class TBaseLanguage implements DTO {
 	public void setId(long id) {
 		this.id = id;
 	}
-	public int getType() {
+	
+	public long getType() {
 		return type;
 	}
-	public void setType(int type) {
+	public void setType(long type) {
 		this.type = type;
 	}
-	public int getCode() {
+	
+	public long getCode() {
 		return code;
 	}
-	public void setCode(int code) {
+	public void setCode(long code) {
 		this.code = code;
 	}
 	public String getLabel() {

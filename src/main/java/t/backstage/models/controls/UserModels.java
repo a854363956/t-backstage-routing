@@ -1,10 +1,12 @@
 package t.backstage.models.controls;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import t.backstage.error.BusinessException;
@@ -27,7 +29,139 @@ public class UserModels {
 	private t.sql.SessionFactory sessionFactory;
 	@org.springframework.beans.factory.annotation.Autowired
 	private NotifyModels notifyModels;
+	// 默认重置密码的KEY
+	private final static String RESET_PASSWORD_LEY = "123456";
+	/**
+	 * 重置密码
+	 * @throws NoSuchAlgorithmException 
+	 */
+	@Post
+	public void resetPassword(JSONObject j) throws NoSuchAlgorithmException {
+		String id = j.getString("id");
+		int rId = t.backstage.models.context.ContextUtils.getCurrentRole().getIsRoot();
+		if(rId == 0) {
+			Query<TBaseUser> tbuQuery = sessionFactory.getCurrentSession().createQuery("select * from t_base_user where id=:id",TBaseUser.class);
+			tbuQuery.setParameter("id",id);
+			TBaseUser tbu = tbuQuery.uniqueResult();
+			if(tbu == null) {
+				// 当前人员不存在
+				throw new BusinessException(5000);
+			}else {
+				// 将密码进行重置
+				tbu.setPassword(t.backstage.models.context.ContextUtils.md5(RESET_PASSWORD_LEY));
+				sessionFactory.getCurrentSession().update(tbu);
+			}
+		}else {
+			// 当前登入的用户不是管理员，无法进行操作
+			throw new BusinessException(5022,t.backstage.models.context.ContextUtils.getCurrentRole().getRoleName());
+		}
+	}
 	
+	/**
+	 * 删除当前用户
+	 * @param j
+	 */
+	@Post
+	public void delUser(JSONObject j) {
+		String id = j.getString("id");
+		if(t.backstage.models.context.StringUtils.isNull(id)) {
+			throw new BusinessException(5015,"id");
+		}
+		Query<TBaseSession> tbuSessionQuery = sessionFactory.getCurrentSession().createQuery("select * from t_base_session where uId=:uId",TBaseSession.class);
+		tbuSessionQuery.setParameter("uId",id);
+		if(tbuSessionQuery.uniqueResult() != null) {
+			throw new BusinessException(5023);
+		}
+		
+		Query<TBaseUser> tbuQuery = sessionFactory.getCurrentSession().createQuery("select * from t_base_user where id=:id",TBaseUser.class);
+		tbuQuery.setParameter("id",id);
+		TBaseUser tbu = tbuQuery.uniqueResult();
+		if(tbu == null) {
+			// 当前人员不存在
+			throw new BusinessException(5000);
+		}else {
+			long whid = tbu.getWhId();
+			if(t.backstage.models.context.ContextUtils.getCurrentUser().getWhId() == whid) {
+				// 删除选择的人员信息
+				sessionFactory.getCurrentSession().delete(tbu);
+			}else {
+				// 当前人员不属于这个仓库，无法进行删除
+				throw new BusinessException(5021);
+			}
+		}
+	}
+
+	
+	/**
+	 * 添加人员信息
+	 * @param j
+	 * @throws NoSuchAlgorithmException 
+	 */
+	@Post 
+	public void addUser(JSONObject j) throws NoSuchAlgorithmException {
+		// 用户名
+		String userName = j.getString("userName");
+		if(t.backstage.models.context.StringUtils.isNull(userName)) {
+			throw new BusinessException(5015,"userName");
+		}
+		// 登入名称
+		String loginName= j.getString("loginName");
+		if(t.backstage.models.context.StringUtils.isNull(loginName)) {
+			throw new BusinessException(5015,"loginName");
+		}
+		// 用户密码
+		String password = j.getString("password");
+		if(t.backstage.models.context.StringUtils.isNull(password)) {
+			throw new BusinessException(5015,"password");
+		}
+		// 用户头像
+		String avatar=j.getString("avatar");
+		if(t.backstage.models.context.StringUtils.isNull(avatar)) {
+			throw new BusinessException(5015,"avatar");
+		}
+		
+		Query<TBaseUser> tbuQuery = sessionFactory.getCurrentSession().createQuery("select * from t_base_user where loginName=:loginName",TBaseUser.class);
+		tbuQuery.setParameter("loginName",loginName);
+		// 如果用户名不存在则添加用户
+		if(tbuQuery.list().size() == 0) {
+			
+			Date date = new Date();
+			// START 默认情况下添加的帐号失效时间为3年后
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+			cal.add(Calendar.YEAR,3);
+			// END 
+			TBaseUser tbu = new TBaseUser();
+			// 默认当前时间为创建时间
+			tbu.setCreateTime(new Date());
+			// 设置用户头像
+			tbu.setAvatar(avatar);
+			// 设置创建用户为当前用户
+			tbu.setCreateUser(t.backstage.models.context.ContextUtils.getCurrentUser().getId());
+			// 设置失效时间为三年后
+			tbu.setEffectiveDate(cal.getTime());
+			tbu.setId(t.backstage.models.context.ContextUtils.getUUID());
+			// 国际化默认为中文 0表示中文
+			tbu.setLanguage(0);
+			tbu.setLoginName(loginName);
+			tbu.setUserName(userName);
+			// 默认为30分钟后失效
+			tbu.setOnline(30);
+			// 设置仓库为当前的仓库地址
+			tbu.setWhId(t.backstage.models.context.ContextUtils.getCurrentUser().getWhId());
+			// 设置角色为当前角色
+			tbu.setrId(t.backstage.models.context.ContextUtils.getCurrentUser().getrId());
+			tbu.setPassword(t.backstage.models.context.ContextUtils.md5(password));
+			// 默认为0正常启用
+			tbu.setState(0);
+			
+			sessionFactory.getCurrentSession().create(tbu);
+		}else {
+			// 当发现用户名存在则抛出异常，用户名已经存在
+			throw new BusinessException(5020,loginName);
+		}
+		
+	}
 	/***
 	 * 根据人员id查询对应的人员名称
 	 * @return
@@ -111,18 +245,7 @@ public class UserModels {
 		result.put("notifyCount",notifyModels.notifyCount());
 		return result;
 	}
-	/**
-	 * 根据Id删除当前用户
-	 * @param j
-	 */
-	@Post
-	public void delUser(JSONObject j ) {
-		String id = j.getString("id");
-		if(t.backstage.models.context.StringUtils.isNull(id)) {
-			throw new BusinessException(5015,"id");
-		}
-		sessionFactory.getCurrentSession().nativeDMLSQL("delete from t_base_user where id =?",id);
-	}
+
 	
 	/**
 	 * 用户登入 PS: 只支持一个仓库一个用户,不支持一个用户对应多个仓库
@@ -155,7 +278,10 @@ public class UserModels {
 		List<TBaseUser> result = query.list();
 		String ipAddr = t.backstage.models.context.ContextUtils.getIpAddr();
 		// 如果admin登入的是非127.0.0.1的地址访问，那么将禁止此用户登入
-		if("admin".equals(userName) &&  "127.0.0.1".equals(ipAddr)) {
+		if("admin".equals(userName) &&  !"127.0.0.1".equals(ipAddr)) {
+			// 5007 admin用户只能在本地登入,无法在除127.0.0.1的其他地址内登入
+			throw new t.backstage.error.BusinessException(5007);
+		}else {
 			if(result.isEmpty()) {
 				// 5000 表示根据用户名称和仓库Id未找到对应的用户资料
 				throw new t.backstage.error.BusinessException(5000);
@@ -200,9 +326,6 @@ public class UserModels {
 					throw new t.backstage.error.BusinessException(5001);
 				}
 			}
-		}else {
-			// 5007 admin用户只能在本地登入,无法在除127.0.0.1的其他地址内登入
-			throw new t.backstage.error.BusinessException(5007);
 		}
 		
 	}
